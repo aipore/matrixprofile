@@ -1,15 +1,30 @@
 import setuptools
 
-from setuptools import dist
-dist.Distribution().fetch_build_eggs(['cython', 'numpy>=1.16.2', 'wheel'])
+try:
+    from Cython.Build import cythonize
+except ImportError:
+    from setuptools import dist
+    dist.Distribution().fetch_build_eggs(['cython'])
+    from Cython.Build import cythonize
+
+try:
+    import numpy
+except ImportError:
+    from setuptools import dist
+    dist.Distribution().fetch_build_eggs(['numpy>=1.16.2'])
+    import numpy
+
+try:
+    import wheel
+except ImportError:
+    from setuptools import dist
+    dist.Distribution().fetch_build_eggs(['wheel'])
+    import wheel
 
 from distutils.extension import Extension
 
-from Cython.Build import cythonize
-import numpy
 
 import os, sys
-from glob import glob
 
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(DIR_PATH)
